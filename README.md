@@ -18,36 +18,6 @@
 - Framework-agnostic – works with vanilla JS/TS, React, Angular, Vue, Svelte
 - Enterprise-ready (planned) – audit logs, compliance helpers
 
-## Driftless vs Alternatives — Comparison Table
-
-| Feature / Capability | Driftless | PouchDB + CouchDB Replication | RxDB | CRDTs (Yjs / Automerge) | Workbox + Background Sync | Firebase / Supabase Offline Features |
-|---|---|---|---|---|---|---|
-| Local queue of user actions | ✅ (IndexedDB, explicit queue) | ✅ (with CouchDB) | ✅ | ✅ (for CRDT-backed data) | ⚠️ (background sync queues raw requests, but limited visibility) | ✅ (for certain SDKs, e.g. Firestore offline) |
-| UUID-based IDs / Versioning Metadata | ✅ | ✅ (via document revisions) | ✅ | ✅ | ❌ | ✅ (depending on backend) |
-| Conflict detection / customizable conflict resolution | ✅ (via `onConflict` / event) | ✅ (manual resolution, CouchDB revision merge) | ✅ (some support) | ✅ (CRDT merges automatically) | ❌ / Very limited | ⚠️ (depends on product; sometimes “last write wins” or use optimistic concurrency) |
-| Visibility & Inspectability of queued items | ✅ (can inspect IndexedDB queue) | Partial (replication logs, tools) | ✅ (reactive local DB) | ❌ / not for raw actions | ❌ (service worker under-the-hood) | Partial |
-| Lightweight footprint | ✅ (designed to be minimal core + adapters) | Heavier (bundle + server replication support) | Heavier (reactivity, plugin layers) | Medium (for CRDT operations) | Lightweight for caching; lacks full conflict logic | Variable; SDKs tend to include a lot of features |
-| Framework-agnostic | ✅ | ✅ | ✅ | Mostly, if adapted | ✅ for caching; data sync usually integrated per-framework | SDK tied, some frameworks only |
-| Dependency on backend choices | Low — any backend that can respond with `ok` / `conflict` works | High — you typically need CouchDB or compatible server | Medium/High — replication plugin/backends required | High — need CRDT-aware servers or peers | Low for caching; high for data consistency | Medium — depends on backend features and SDK availability |
-| UI state hooks / status support | ✅ (offline, queued, syncing, conflict, success) | Partial / custom | ✅ (if you build) | ❌ / needs extra work | ❌ (mostly invisible to UI) | ✅ (some SDKs provide) |
-| Compliance / audit log friendliness | ✅ (versioning + metadata) | Medium (replication logs, but restructuring needed) | Medium | Medium-Low | Low | High (stores persistent data + metadata) |
-
----
-
-### Key Takeaways
-
-- **Where Driftless excels**:
-  - Clear, inspectable local queue (IndexedDB)  
-  - Conflict resolution via `onConflict` + custom merge  
-  - Lightweight, framework-agnostic API  
-  - Good metadata (UUIDs, versions) for auditing
-
-- **Where alternatives may be better**:
-  - If you already use CouchDB (PouchDB) and need live replication across devices  
-  - If you need real-time collaborative editing (CRDTs like Yjs or Automerge)  
-  - If your backend / product already includes offline SDKs (Firebase, Supabase) and you want to leverage those
-
-
 ---
 
 ## Architecture
@@ -205,6 +175,37 @@ You can inspect and debug the queue directly in your browser:
 - **Healthcare**: Nurse logs vitals offline, syncs later, conflict if another nurse updated
 - **Logistics**: Driver scans packages offline, syncs later, conflict if hub already processed
 - **Retail**: Shopper adds items offline, cart merges smoothly when online
+
+---
+
+## Driftless vs Alternatives — Comparison Table
+
+| Feature / Capability | Driftless | PouchDB + CouchDB Replication | RxDB | CRDTs (Yjs / Automerge) | Workbox + Background Sync | Firebase / Supabase Offline Features |
+|---|---|---|---|---|---|---|
+| Local queue of user actions | ✅ (IndexedDB, explicit queue) | ✅ (with CouchDB) | ✅ | ✅ (for CRDT-backed data) | ⚠️ (background sync queues raw requests, but limited visibility) | ✅ (for certain SDKs, e.g. Firestore offline) |
+| UUID-based IDs / Versioning Metadata | ✅ | ✅ (via document revisions) | ✅ | ✅ | ❌ | ✅ (depending on backend) |
+| Conflict detection / customizable conflict resolution | ✅ (via `onConflict` / event) | ✅ (manual resolution, CouchDB revision merge) | ✅ (some support) | ✅ (CRDT merges automatically) | ❌ / Very limited | ⚠️ (depends on product; sometimes “last write wins” or use optimistic concurrency) |
+| Visibility & Inspectability of queued items | ✅ (can inspect IndexedDB queue) | Partial (replication logs, tools) | ✅ (reactive local DB) | ❌ / not for raw actions | ❌ (service worker under-the-hood) | Partial |
+| Lightweight footprint | ✅ (designed to be minimal core + adapters) | Heavier (bundle + server replication support) | Heavier (reactivity, plugin layers) | Medium (for CRDT operations) | Lightweight for caching; lacks full conflict logic | Variable; SDKs tend to include a lot of features |
+| Framework-agnostic | ✅ | ✅ | ✅ | Mostly, if adapted | ✅ for caching; data sync usually integrated per-framework | SDK tied, some frameworks only |
+| Dependency on backend choices | Low — any backend that can respond with `ok` / `conflict` works | High — you typically need CouchDB or compatible server | Medium/High — replication plugin/backends required | High — need CRDT-aware servers or peers | Low for caching; high for data consistency | Medium — depends on backend features and SDK availability |
+| UI state hooks / status support | ✅ (offline, queued, syncing, conflict, success) | Partial / custom | ✅ (if you build) | ❌ / needs extra work | ❌ (mostly invisible to UI) | ✅ (some SDKs provide) |
+| Compliance / audit log friendliness | ✅ (versioning + metadata) | Medium (replication logs, but restructuring needed) | Medium | Medium-Low | Low | High (stores persistent data + metadata) |
+
+---
+
+### Key Takeaways
+
+- **Where Driftless excels**:
+  - Clear, inspectable local queue (IndexedDB)  
+  - Conflict resolution via `onConflict` + custom merge  
+  - Lightweight, framework-agnostic API  
+  - Good metadata (UUIDs, versions) for auditing
+
+- **Where alternatives may be better**:
+  - If you already use CouchDB (PouchDB) and need live replication across devices  
+  - If you need real-time collaborative editing (CRDTs like Yjs or Automerge)  
+  - If your backend / product already includes offline SDKs (Firebase, Supabase) and you want to leverage those
 
 ---
 
