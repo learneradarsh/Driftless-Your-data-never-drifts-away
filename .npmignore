@@ -1,0 +1,8 @@
+# Source files (we publish only dist)
+src
+examples
+.vscode
+*.log
+tests
+/*.ts
+/.github
