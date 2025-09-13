@@ -10,13 +10,13 @@ export type StoreItem = {
   type: string;
   payload: any;
   createdAt: number;
-  version?: number; // simple conflict/version metadata
+  version?: number;
 };
 
 export type AdapterResult = {
   id?: string | number;
   status?: 'ok' | 'conflict' | 'error';
-  conflictWith?: any; // server representation to help resolve
+  conflictWith?: any;
 };
 
 export type Adapter = {

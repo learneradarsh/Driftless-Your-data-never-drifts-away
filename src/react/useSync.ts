@@ -11,7 +11,6 @@ export function useSync(namespace = 'default', endpoint = '/api/sync') {
 
   useEffect(() => {
     sync.on('status', (s: any) => setStatus(s));
-    // cleanup
     return () => sync.stop();
   }, []);
 

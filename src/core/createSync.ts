@@ -40,19 +40,16 @@ export function createSync(opts: {
         if (r.status === 'ok') {
           processedIds.push(r.id ?? local.id ?? -1);
         } else if (r.status === 'conflict') {
-          // Emit conflict and allow resolution
           status = 'conflict';
           emit('status', status);
           if (onConflictHandler) {
             const resolved = await onConflictHandler(local, r.conflictWith);
-            // put resolved item back into queue with incremented version
             const merged: StoreItem = {
               ...resolved,
               version: (resolved.version || 0) + 1,
             };
             await queue.push(merged);
           } else {
-            // by default, keep it queued and surface conflict event
             emit('conflict', { local, remote: r.conflictWith });
           }
         }
@@ -62,18 +59,15 @@ export function createSync(opts: {
         await queue.removeByIds(processedIds);
       }
 
-      // if items processed and none in conflict, success
       const remaining = await queue.all();
       status = remaining.length ? 'queued' : 'success';
       emit('status', status);
     } catch (err) {
-      // network or server error - remain queued and retry later
       status = 'queued';
       emit('status', status);
     }
   }
 
-  // auto-poll
   const interval = setInterval(() => trySync(), opts.pollIntervalMs || 5000);
 
   window.addEventListener('online', () => trySync());
@@ -89,7 +83,6 @@ export function createSync(opts: {
       };
       await queue.push(item);
       emit('status', 'queued');
-      // attempt immediate sync
       trySync();
     },
     on(event: 'status' | 'conflict', cb: Function) {

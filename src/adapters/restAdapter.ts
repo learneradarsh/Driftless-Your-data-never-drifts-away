@@ -15,7 +15,6 @@ export function createRestAdapter(opts: {
         body: JSON.stringify({ items }),
       });
       if (!res.ok) throw new Error('Sync failed');
-      // Expect server to return array of results for each item
       return (await res.json()) as AdapterResult[];
     },
   };
