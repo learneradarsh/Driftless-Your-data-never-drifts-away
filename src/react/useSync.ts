@@ -18,5 +18,7 @@ export function useSync(namespace = 'default', endpoint = '/api/sync') {
   return {
     store: (payload: any) => sync.store(namespace, payload),
     status,
+    onConflict: (fn: any) => sync.onConflict(fn),
+    _internal: sync._internal,
   };
 }

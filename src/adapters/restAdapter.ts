@@ -1,11 +1,11 @@
-import type { Adapter, StoreItem } from '../core/types';
+import type { Adapter, StoreItem, AdapterResult } from '../core/types';
 
 export function createRestAdapter(opts: {
   endpoint: string;
   headers?: Record<string, string>;
 }): Adapter {
   return {
-    async push(items: StoreItem[]) {
+    async push(items: StoreItem[]): Promise<AdapterResult[]> {
       const res = await fetch(opts.endpoint, {
         method: 'POST',
         headers: {
@@ -15,7 +15,8 @@ export function createRestAdapter(opts: {
         body: JSON.stringify({ items }),
       });
       if (!res.ok) throw new Error('Sync failed');
-      return res.json();
+      // Expect server to return array of results for each item
+      return (await res.json()) as AdapterResult[];
     },
   };
 }
