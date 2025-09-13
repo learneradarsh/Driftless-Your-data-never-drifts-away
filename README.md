@@ -3,7 +3,7 @@
 > **Your data never drifts away.**  
 > Driftless is a framework-agnostic offline-first sync library with conflict handling and visual sync states.
 
-![Npm Package Link](https://www.npmjs.com/package/driftless-sync?activeTab=readme)
+[Npm Package Link](https://www.npmjs.com/package/driftless-sync?activeTab=readme)
 ---
 
 ## Features
