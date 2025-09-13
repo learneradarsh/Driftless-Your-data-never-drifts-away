@@ -145,6 +145,7 @@ If no handler is registered, Driftless emits a `conflict` event so the app can d
 ## Release Notes
 
 **v0.1.0**
+
 - Initial release
 - IndexedDB queue with UUIDs
 - REST adapter
