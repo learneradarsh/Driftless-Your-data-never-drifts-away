@@ -7,13 +7,13 @@
 
 ## Features
 
-- Offline-first UX – queue actions offline and auto-sync when back online  
-- Persistent storage – built on IndexedDB (with fallbacks)  
-- Flexible sync adapters – REST, GraphQL, gRPC (pluggable)  
-- Conflict resolution – last-write-wins, merge, or manual user prompt  
-- Visual states – built-in hooks/components to show offline, syncing, success, conflict  
-- Enterprise-ready – audit logs, GDPR/HIPAA-friendly  
-- Framework-agnostic – works with vanilla JS/TS, React, Angular, Vue, Svelte  
+- Offline-first UX – queue actions offline and auto-sync when back online
+- Persistent storage – built on IndexedDB (with fallbacks)
+- Flexible sync adapters – REST, GraphQL, gRPC (pluggable)
+- Conflict resolution – last-write-wins, merge, or manual user prompt
+- Visual states – built-in hooks/components to show offline, syncing, success, conflict
+- Enterprise-ready – audit logs, GDPR/HIPAA-friendly
+- Framework-agnostic – works with vanilla JS/TS, React, Angular, Vue, Svelte
 
 ---
 
@@ -77,19 +77,19 @@ npm install @driftless/angular
 ### Core API
 
 ```ts
-import { createSync } from "driftless";
+import { createSync } from 'driftless';
 
 const sync = createSync({
-  adapter: "rest",
-  endpoint: "/api/orders",
+  adapter: 'rest',
+  endpoint: '/api/orders',
 });
 
 // Store offline actions
-sync.store("order", { id: 1, status: "pending" });
+sync.store('order', { id: 1, status: 'pending' });
 
 // Listen for sync events
-sync.on("status", status => {
-  console.log("Sync status:", status);
+sync.on('status', (status) => {
+  console.log('Sync status:', status);
   // offline, queued, syncing, success, conflict
 });
 ```
@@ -99,16 +99,14 @@ sync.on("status", status => {
 ### React Example
 
 ```tsx
-import { useSync } from "@driftless/react";
+import { useSync } from '@driftless/react';
 
 function OrderButton() {
-  const { store, status } = useSync("orders");
+  const { store, status } = useSync('orders');
 
   return (
     <div>
-      <button onClick={() => store({ item: "wifi-pass" })}>
-        Buy WiFi
-      </button>
+      <button onClick={() => store({ item: 'wifi-pass' })}>Buy WiFi</button>
       <p>Status: {status}</p>
     </div>
   );
@@ -126,7 +124,7 @@ sync.onConflict((local, remote) => {
   // Example: manual merge
   return {
     ...remote,
-    notes: [...remote.notes, ...local.notes]
+    notes: [...remote.notes, ...local.notes],
   };
 });
 ```
@@ -135,32 +133,32 @@ sync.onConflict((local, remote) => {
 
 ## Package Structure
 
-- `driftless` → core library (framework-agnostic)  
-- `@driftless/react` → React hooks + UI components  
-- `@driftless/vue` → Vue composables  
-- `@driftless/angular` → Angular service  
-- `@driftless/adapters` → REST, GraphQL, Firebase, Supabase, custom  
+- `driftless` → core library (framework-agnostic)
+- `@driftless/react` → React hooks + UI components
+- `@driftless/vue` → Vue composables
+- `@driftless/angular` → Angular service
+- `@driftless/adapters` → REST, GraphQL, Firebase, Supabase, custom
 
 ---
 
 ## Use Cases
 
-- **Airlines**: Passenger buys WiFi offline, syncs later, conflict handled if purchased elsewhere  
-- **Healthcare**: Nurse logs vitals offline, syncs later, conflict if another nurse updated  
-- **Logistics**: Driver scans packages offline, syncs later, conflict if hub already processed  
-- **Retail**: Shopper adds items offline, cart merges smoothly when online  
+- **Airlines**: Passenger buys WiFi offline, syncs later, conflict handled if purchased elsewhere
+- **Healthcare**: Nurse logs vitals offline, syncs later, conflict if another nurse updated
+- **Logistics**: Driver scans packages offline, syncs later, conflict if hub already processed
+- **Retail**: Shopper adds items offline, cart merges smoothly when online
 
 ---
 
 ## Roadmap
 
-- [ ] Core offline queue + retry  
-- [ ] REST adapter  
-- [ ] GraphQL adapter  
-- [ ] Conflict resolution strategies  
-- [ ] React/Vue/Angular bindings  
-- [ ] UI components for status & conflict dialogs  
-- [ ] Cloud sync connectors (Firebase, Supabase)  
+- [ ] Core offline queue + retry
+- [ ] REST adapter
+- [ ] GraphQL adapter
+- [ ] Conflict resolution strategies
+- [ ] React/Vue/Angular bindings
+- [ ] UI components for status & conflict dialogs
+- [ ] Cloud sync connectors (Firebase, Supabase)
 
 ---
 
