@@ -8,47 +8,21 @@
 ## Features
 
 - Offline-first UX – queue actions offline and auto-sync when back online
-- Persistent storage – built on IndexedDB (with fallbacks)
-- Flexible sync adapters – REST, GraphQL, gRPC (pluggable)
-- Conflict resolution – last-write-wins, merge, or manual user prompt
-- Visual states – built-in hooks/components to show offline, syncing, success, conflict
-- Enterprise-ready – audit logs, GDPR/HIPAA-friendly
+- Persistent storage – built on IndexedDB with UUID-based IDs
+- Flexible sync adapters – REST available today, GraphQL & gRPC planned
+- Conflict resolution – configurable via `onConflict` handler, supports:
+  - Last-write-wins
+  - Merge strategies
+  - Manual user prompt
+- Visual states – built-in hooks/components to show offline, queued, syncing, success, conflict
 - Framework-agnostic – works with vanilla JS/TS, React, Angular, Vue, Svelte
+- Enterprise-ready (planned) – audit logs, compliance helpers
 
 ---
 
 ## Architecture
 
-```
- ┌─────────────┐
- │   Actions   │   User actions (form submit, button click, etc.)
- └──────┬──────┘
-        │
-        ▼
- ┌─────────────┐
- │   Queue     │   Stored locally (IndexedDB / localStorage)
- └──────┬──────┘
-        │
-   Offline? Yes ──► Stay queued until connection is back
-        │
-        ▼
- ┌─────────────┐
- │   Sync      │   Retry logic + adapters (REST, GraphQL, etc.)
- └──────┬──────┘
-        │
-        ▼
- ┌─────────────┐
- │  Conflict   │   Resolution strategies:
- │             │   - Last write wins
- │             │   - Merge
- │             │   - Ask user
- └──────┬──────┘
-        │
-        ▼
- ┌─────────────┐
- │   Server    │   Final source of truth
- └─────────────┘
-```
+![Architecture Diagram](diagram.png)
 
 ---
 
@@ -78,10 +52,13 @@ npm install @driftless/angular
 
 ```ts
 import { createSync } from 'driftless';
+import { createRestAdapter } from 'driftless';
+
+const adapter = createRestAdapter({ endpoint: '/api/orders' });
 
 const sync = createSync({
-  adapter: 'rest',
-  endpoint: '/api/orders',
+  adapter,
+  pollIntervalMs: 5000,
 });
 
 // Store offline actions
@@ -102,7 +79,7 @@ sync.on('status', (status) => {
 import { useSync } from '@driftless/react';
 
 function OrderButton() {
-  const { store, status } = useSync('orders');
+  const { store, status } = useSync('orders', '/api/orders');
 
   return (
     <div>
@@ -117,7 +94,7 @@ function OrderButton() {
 
 ## Conflict Resolution
 
-Driftless supports multiple strategies:
+Driftless supports custom resolution strategies via the `onConflict` API:
 
 ```ts
 sync.onConflict((local, remote) => {
@@ -129,6 +106,8 @@ sync.onConflict((local, remote) => {
 });
 ```
 
+If no handler is registered, Driftless emits a `conflict` event so the app can decide.
+
 ---
 
 ## Package Structure
@@ -137,7 +116,7 @@ sync.onConflict((local, remote) => {
 - `@driftless/react` → React hooks + UI components
 - `@driftless/vue` → Vue composables
 - `@driftless/angular` → Angular service
-- `@driftless/adapters` → REST, GraphQL, Firebase, Supabase, custom
+- `@driftless/adapters` → REST (available), GraphQL/Firebase/Supabase (planned)
 
 ---
 
@@ -152,13 +131,25 @@ sync.onConflict((local, remote) => {
 
 ## Roadmap
 
-- [ ] Core offline queue + retry
-- [ ] REST adapter
-- [ ] GraphQL adapter
-- [ ] Conflict resolution strategies
+- [x] Core offline queue + retry (IndexedDB)
+- [x] REST adapter
+- [x] Conflict resolution strategies
 - [ ] React/Vue/Angular bindings
 - [ ] UI components for status & conflict dialogs
+- [ ] GraphQL adapter
 - [ ] Cloud sync connectors (Firebase, Supabase)
+- [ ] Enterprise features (audit logs, compliance)
+
+---
+
+## Release Notes
+
+**v0.1.0**
+- Initial release
+- IndexedDB queue with UUIDs
+- REST adapter
+- Conflict resolution API
+- React hook (`useSync`)
 
 ---
 
