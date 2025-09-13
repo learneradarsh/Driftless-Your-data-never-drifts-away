@@ -22,7 +22,7 @@
 
 ## Architecture
 
-![Architecture Diagram](diagram.png)
+![Architecture Diagram](docs/diagram.png)
 
 ---
 
