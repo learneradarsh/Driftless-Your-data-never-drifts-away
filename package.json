@@ -1,0 +1,26 @@
+{
+    "name": "driftless",
+    "version": "0.1.0",
+    "description": "Offline-first sync library",
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+    "build": "tsc -b",
+    "clean": "rimraf dist",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "vitest"
+    },
+    "files": ["dist"],
+    "license": "MIT",
+    "devDependencies": {
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.0",
+    "rimraf": "^5.0.0",
+    "eslint": "^8.0.0",
+    "@types/node": "^20.0.0"
+    },
+    "peerDependencies": {
+    "react": "^16 || ^17 || ^18"
+    }
+    }
