@@ -22,7 +22,7 @@
 
 ## Architecture
 
-![Architecture Diagram](https://drive.google.com/file/d/1Lw22kdV4y9TR1Fi6gEOfgUhqWfySDHD3/view?usp=sharing)
+![Architecture Diagram](docs/diagram.png)
 
 ---
 
