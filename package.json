@@ -1,5 +1,5 @@
 {
-  "name": "driftless",
+  "name": "driftless-sync",
   "version": "0.1.0",
   "description": "Offline-first sync library",
   "main": "dist/index.js",
