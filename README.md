@@ -110,6 +110,53 @@ If no handler is registered, Driftless emits a `conflict` event so the app can d
 
 ---
 
+
+### 4. Inspecting the Queue
+
+Driftless uses **IndexedDB** as its local storage engine.  
+All queued items are stored under the database name **`driftless-db`** in the object store **`queue`**.
+
+You can inspect and debug the queue directly in your browser:
+
+1. **Open DevTools**
+   - Chrome / Edge: `F12` → *Application* tab
+   - Firefox: `F12` → *Storage* tab
+
+2. **Navigate to IndexedDB**
+   - Expand `IndexedDB` → `driftless-db` → `queue`
+
+3. **View queued items**
+   - Each entry is a JSON object of type `StoreItem`:
+     ```json
+     {
+       "id": "8b31c7d2-4f42-4d77-bdb2-9245c35640e3",
+       "type": "order",
+       "payload": { "item": "wifi-pass" },
+       "createdAt": 1694600000000,
+       "version": 1
+     }
+     ```
+   - `id`: unique UUID generated when the item is queued
+   - `type`: logical namespace you passed to `store()`
+   - `payload`: the actual data to sync
+   - `createdAt`: timestamp (ms since epoch)
+   - `version`: incremented on every conflict resolution retry
+
+4. **Check sync flow**
+   - When you go offline and call `store()`, the item will appear here.
+   - When you come back online and sync succeeds, the item will be removed.
+   - If there’s a conflict, the item will either:
+     - be retried with a new `version` (if `onConflict` handled it), or
+     - stay in the queue until you resolve it.
+
+5. **Why inspect the queue?**
+   - To debug issues where items don’t sync.
+   - To confirm Driftless is persisting data offline.
+   - To visualize how conflicts are retried and resolved.
+
+
+---
+
 ## Package Structure
 
 - `driftless` → core library (framework-agnostic)
